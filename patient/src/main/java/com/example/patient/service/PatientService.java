@@ -38,13 +38,13 @@ public class PatientService {
 
     }
 
-    public String checkPhone(String patient_phone){
+    public boolean checkPhone(String patient_phone){
         Iterable<Patient> patient = patientRepository.findPhone(patient_phone);
         if(patient!=null){
-            return "";
+            return true;
 
         }
-        return "Phone Number not Found!";
+        return false;
     }
     public void deletePatient(String patient_id) {
         Patient patient = patientRepository.findById(patient_id).orElse(null);

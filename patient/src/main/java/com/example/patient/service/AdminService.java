@@ -12,15 +12,13 @@ public class AdminService {
     private final AdminRepository adminRepository;
     @Autowired
     public AdminService(AdminRepository adminRepository){this.adminRepository = adminRepository;}
-    public ResponseEntity<?> checkPassword(int admin_id, String password){
+    public Admin checkPassword(int admin_id, String password){
         //String x = passwordEn(password);
-        Admin admin = adminRepository.findById(admin_id).orElse(null);
+        return adminRepository.findById(admin_id).orElse(null);
         //BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder()
             //boolean isPasswordMatch = passwordEncoder.matches(password, n.getPassword());
             //if(isPasswordMatch){return "";}
-            if(admin!=null){
-            if(password.equals(admin.getPassword())){return ResponseEntity.ok("Login successful");}}
-        return ResponseEntity.status(401).body("Invalid credentials");
+
 
 
     }

@@ -40,14 +40,14 @@ public class PatientController {
         patientService.updatePatient(patient_id, patient_address, patient_phone, prior_pregnancies, occupation);
         return "Patient successfully updated";
     }
-
+/*
     @GetMapping("/checkPhone/{patient_phone}")
     @ResponseBody
-    public String checkPhone(@PathVariable String patient_phone){
+    public boolean checkPhone(@PathVariable String patient_phone){
         return patientService.checkPhone(patient_phone);
 
 
-    }
+    }*/
 
     @DeleteMapping("/deletePatient/{patient_id}")
     @ResponseBody

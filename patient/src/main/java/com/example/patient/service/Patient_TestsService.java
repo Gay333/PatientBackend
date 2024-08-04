@@ -41,8 +41,8 @@ public class Patient_TestsService {
     public Patient_Tests addnewPatientTest(Patient_Tests patient) {
         try {
              //Perform prediction and set the outcome
-            float prediction = predictionService.predict(patient);
-            patient.setOutcome((int) prediction);
+            int prediction = predictionService.predict(patient);
+            patient.setOutcome(prediction);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Prediction failed");

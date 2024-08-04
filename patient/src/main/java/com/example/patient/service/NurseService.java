@@ -38,16 +38,16 @@ public class NurseService {
 
     }
 
-    public ResponseEntity<?> checkPassword(String nurse_id, String password){
+    public Iterable<Nurse> checkPassword(String nurse_id, String password){
         //String x = passwordEn(password);
         Iterable<Nurse> nurse = nurseRepository.findPassword(nurse_id,password);
         //BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         for(Nurse n:nurse){
             //boolean isPasswordMatch = passwordEncoder.matches(password, n.getPassword());
             //if(isPasswordMatch){return "";}
-            if(password.equals(n.getPassword())){return ResponseEntity.ok("Login successful");}
+            //if(password.equals(n.getPassword())){return ResponseEntity.ok("Login successful");}
         }
-        return ResponseEntity.status(401).body("Invalid credentials");
+        return nurse;
 
 
     }
