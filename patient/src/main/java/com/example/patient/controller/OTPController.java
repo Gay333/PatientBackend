@@ -22,6 +22,7 @@ public class OTPController {
 */
 
 import com.example.patient.service.OTPService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,8 +44,8 @@ public class OTPController {
     }
 
     @PostMapping("/verify")
-    public boolean verifyOTP(@RequestParam String phoneNumber, @RequestParam String otp) {
-        return otpService.verifyOTP(phoneNumber, otp);
+    public boolean verifyOTP(@RequestParam String phoneNumber, @RequestParam String otp, HttpSession session) {
+        return otpService.verifyOTP(phoneNumber, otp, session);
     }
 }
 

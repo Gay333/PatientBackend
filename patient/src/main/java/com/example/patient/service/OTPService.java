@@ -47,10 +47,14 @@ public class OTPService {
 
 //package com.example.patient.service;
 
+import com.example.patient.model.Patient;
+import com.example.patient.repository.PatientRepository;
+import com.example.patient.service.PatientService;
 import com.vonage.client.VonageClient;
 import com.vonage.client.sms.MessageStatus;
 import com.vonage.client.sms.SmsSubmissionResponse;
 import com.vonage.client.sms.messages.TextMessage;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -61,7 +65,7 @@ import java.util.Random;
 @Service
 public class OTPService {
     private final PatientService patientService;
-    public OTPService(PatientService patientService){this.patientService=patientService;}
+    public OTPService(PatientService patientService, PatientRepository patientRepository){this.patientService=patientService;this.patientRepository = patientRepository;}
     @Value("${vonage.api.key}")
     private String apiKey;
 
@@ -69,6 +73,9 @@ public class OTPService {
     private String apiSecret;
 
     private Map<String, String> otpStorage = new HashMap<>();
+    private PatientRepository patientRepository;
+
+    //public OTPService(){}
 
     public String generateOTP() {
         Random random = new Random();
@@ -82,7 +89,7 @@ public class OTPService {
             if (!phoneNumber.startsWith("+")) {
                 phoneNumber = "+91" + phoneNumber; // Assuming +91 for India, change as needed
             }
-            if (phoneNumber.equals("")) {
+            if (!phoneNumber.equals("")) {
 
                 VonageClient client = VonageClient.builder()
                         .apiKey(apiKey)
@@ -110,8 +117,18 @@ public class OTPService {
         }
     }
 
-    public boolean verifyOTP(String phoneNumber, String otp) {
+    public boolean verifyOTP(String phoneNumber, String otp, HttpSession session) {
         String storedOtp = otpStorage.get(phoneNumber);
-        return storedOtp != null && storedOtp.equals(otp);
+        boolean x = storedOtp != null && storedOtp.equals(otp);
+        Iterable<Patient> patient = patientRepository.findPhone(phoneNumber);
+        if(x){
+            for(Patient p: patient) {
+                session.setAttribute("patient_id", p.getPatient_Id());
+                System.out.println("PATIENT: " + session.getAttribute("patient_id"));
+                return storedOtp != null && storedOtp.equals(otp);
+            }
+        }
+        return false;
+
     }
 }

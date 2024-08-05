@@ -14,7 +14,7 @@ public interface PatientRepository extends CrudRepository<Patient,String>{
     //List<Patient> findAllById(String patient_id);
     //List<Patient> findByFirstName(String patient_firstName);
     @Query(value="SELECT * FROM Patient p WHERE p.patient_phone = :patient_phone",nativeQuery = true)
-    Iterable<Patient> findPhone(@Param("patient_phone") String patient_ID);
+    Iterable<Patient> findPhone(@Param("patient_phone") String patient_phone);
 }
 
 

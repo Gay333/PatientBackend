@@ -1,7 +1,9 @@
 package com.example.patient.controller;
 import com.example.patient.model.Patient;
 import com.example.patient.service.PatientService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,6 +57,39 @@ public class PatientController {
         patientService.deletePatient(patient_id);
         return "Patient successfully updated";
     }
+
+
+
+    @GetMapping("/welcome")
+    public ResponseEntity<?> welcome(HttpSession session) {
+        System.out.println("SECOND" + session.getAttribute("patient_id"));
+        String patient_id = (String) session.getAttribute("patient_id");
+        if (patient_id != null) {
+            System.out.println("Welcome Request. patient_firstname ID from session " + patient_id + " " + session.getAttribute("patient_id"));
+            return ResponseEntity.ok("Welcome " + patient_id);
+        } else {
+            return ResponseEntity.badRequest().body("No patient logged in");
+        }
+        //System.out.println("Welcome");
+        //return ResponseEntity.ok("Welcome " );    }
+    }
+
+    @GetMapping("/patientlogout")
+    public ResponseEntity<?> patientlogout(HttpSession session) {
+        session.invalidate();
+        System.out.println("DONE");
+        return ResponseEntity.ok("Logout Successful");
+    }
+
+    @GetMapping("/getID")
+    public String getID(HttpSession session) {
+        //session.invalidate();
+        //System.out.println("DONE");
+        System.out.println((String) session.getAttribute("patient_id"));
+        return (String) session.getAttribute("patient_id");
+    }
+
+
 
 
 }

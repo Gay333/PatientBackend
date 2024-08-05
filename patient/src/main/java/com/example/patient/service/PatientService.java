@@ -40,10 +40,14 @@ public class PatientService {
 
     public boolean checkPhone(String patient_phone){
         Iterable<Patient> patient = patientRepository.findPhone(patient_phone);
-        if(patient!=null){
-            return true;
+        for(Patient p:patient){
+            if(p!=null){
+                return true;
+
+            }
 
         }
+
         return false;
     }
     public void deletePatient(String patient_id) {
