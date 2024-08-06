@@ -1,29 +1,28 @@
-package com.example.patient.controller;
+package com.example.patient.websocket;
 
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-@RestController
-@RequestMapping("/chatbot")
-public class ChatController {
+public class ChatWebSocketHandler extends TextWebSocketHandler {
 
-    @PostMapping(value = "/query", consumes = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<String> getResponse(@RequestBody String userInput) {
+    @Override
+    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+        String userInput = message.getPayload();
         String response = callPythonScript(userInput);
-        return ResponseEntity.ok(response);
+        session.sendMessage(new TextMessage(response));
     }
 
     private String callPythonScript(String userInput) {
         StringBuilder output = new StringBuilder();
-        System.out.println("Received user input: " + userInput);
+        //System.out.println("Received user input: " + userInput);
         try {
             // Command to execute the Python script
             String[] command = new String[]{"python", "C:/Users/Gayathri.Venkatesan/Downloads/myscript.py", userInput};
-            System.out.println("Executing command: " + String.join(" ", command));
+            //System.out.println("Executing command: " + String.join(" ", command));
 
             // Start the process
             ProcessBuilder processBuilder = new ProcessBuilder(command);
@@ -38,13 +37,13 @@ public class ChatController {
 
             // Wait for the process to complete
             int exitCode = process.waitFor();
-            System.out.println("Python script exited with code: " + exitCode);
+            //System.out.println("Python script exited with code: " + exitCode);
         } catch (Exception e) {
             e.printStackTrace();
             return "Error occurred while calling Python script.";
         }
-        System.out.println("Python script output: " + output.toString());
+        //System.out.println("Python script output: " + output.toString());
         return output.toString();
     }
-
 }
+
