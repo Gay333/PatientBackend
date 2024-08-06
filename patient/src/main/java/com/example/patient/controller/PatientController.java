@@ -1,5 +1,6 @@
 package com.example.patient.controller;
 import com.example.patient.model.Patient;
+import com.example.patient.repository.PatientRepository;
 import com.example.patient.service.PatientService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,9 @@ import org.springframework.web.bind.annotation.*;
 public class PatientController {
 
     private final PatientService patientService;
+    private final PatientRepository patientRepository;
     @Autowired
-    public PatientController(PatientService patientService){this.patientService = patientService;}
+    public PatientController(PatientService patientService, PatientRepository patientRepository){this.patientService = patientService; this.patientRepository=patientRepository;}
    // @Operation(summary = "Gets all Patients",description="Patients must exist");
 
 
@@ -64,9 +66,10 @@ public class PatientController {
     public ResponseEntity<?> welcome(HttpSession session) {
         System.out.println("SECOND" + session.getAttribute("patient_id"));
         String patient_id = (String) session.getAttribute("patient_id");
+        Patient p = patientRepository.findById(patient_id).orElse(null);
         if (patient_id != null) {
             System.out.println("Welcome Request. patient_firstname ID from session " + patient_id + " " + session.getAttribute("patient_id"));
-            return ResponseEntity.ok("Welcome " + patient_id);
+            return ResponseEntity.ok("Welcome " + p.getPatient_firstname());
         } else {
             return ResponseEntity.badRequest().body("No patient logged in");
         }
