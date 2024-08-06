@@ -1,4 +1,5 @@
 package com.example.patient.controller;
+import com.example.patient.model.Nurse;
 import com.example.patient.model.Patient;
 import com.example.patient.repository.PatientRepository;
 import com.example.patient.service.PatientService;
@@ -92,7 +93,18 @@ public class PatientController {
         return (String) session.getAttribute("patient_id");
     }
 
+    @GetMapping("/profile")
+    public Patient profile(HttpSession session) {
+        //System.out.println("SECOND" + session.getAttribute("nurse_id"));
+        String patient_id = (String) session.getAttribute("patient_id");
+        if (patient_id != null) {
+            Patient n = patientRepository.findById(patient_id).orElse(null);
+            return n;
+        } else {
+            return null;
+        }
 
+    }
 
 
 }

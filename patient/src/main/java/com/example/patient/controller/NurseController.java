@@ -2,6 +2,7 @@ package com.example.patient.controller;
 
 import com.example.patient.model.Nurse;
 import com.example.patient.model.Patient;
+import com.example.patient.repository.NurseRepository;
 import com.example.patient.service.NurseService;
 import com.example.patient.service.PatientService;
 import jakarta.servlet.http.HttpSession;
@@ -14,8 +15,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/nurse")
 public class NurseController {
     private final NurseService nurseService;
+    private final NurseRepository nurseRepository;
     @Autowired
-    public NurseController(NurseService nurseService){this.nurseService = nurseService;}
+    public NurseController(NurseService nurseService, NurseRepository nurseRepository){this.nurseService = nurseService;this.nurseRepository=nurseRepository;}
     @GetMapping("/findAll")
     @ResponseBody
     public Iterable<Nurse>findAll(){
@@ -72,6 +74,21 @@ public class NurseController {
             return ResponseEntity.ok("Welcome " + nurse_id);
         } else {
             return ResponseEntity.badRequest().body("No nurse logged in");
+        }
+        //System.out.println("Welcome");
+        //return ResponseEntity.ok("Welcome " );    }
+    }
+
+    @GetMapping("/profile")
+    public Nurse profile(HttpSession session) {
+        System.out.println("SECOND" + session.getAttribute("nurse_id"));
+        String nurse_id = (String) session.getAttribute("nurse_id");
+        if (nurse_id != null) {
+            Nurse n = nurseRepository.findById(nurse_id).orElse(null);
+            System.out.println(n.getHospital_id());
+            return n;
+        } else {
+            return null;
         }
         //System.out.println("Welcome");
         //return ResponseEntity.ok("Welcome " );    }
